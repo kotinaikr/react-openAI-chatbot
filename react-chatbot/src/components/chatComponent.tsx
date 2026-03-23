@@ -1,10 +1,13 @@
 import React, { useState } from 'react'
 import { LuBot, LuSendHorizontal } from 'react-icons/lu'
 import useChatbot from '../hooks/useChatbot'
+import Markdown from 'react-markdown'
+import useChatScroll from '../hooks/useChatScroll'
 
 const chatComponent: React.FunctionComponent = () => {
   const [input, setInput] = useState('')
   const { messages, sendMessage, isLoading } = useChatbot()
+  const ref = useChatScroll(messages);
 
   const handleSend = () => {
     if (input.trim() && !isLoading) {
@@ -26,7 +29,7 @@ const chatComponent: React.FunctionComponent = () => {
         React + OpenAI Chatbot <LuBot size={25} />
       </h1>
 
-      <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-2 min-h-0">
+      <div ref={ref} className="flex-1 overflow-y-auto p-4 flex flex-col gap-2 min-h-0">
         {messages.length === 0 ? (
           <p className="text-gray-400 text-sm text-center py-8">
             Start a conversation…
@@ -41,7 +44,7 @@ const chatComponent: React.FunctionComponent = () => {
                   : 'bg-gray-200 text-gray-800 self-start'
               }`}
             >
-              {msg.text}
+              <Markdown>{msg.text}</Markdown>
             </div>
           ))
         )}
